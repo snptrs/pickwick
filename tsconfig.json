@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "strict": false,
+    "outDir": "dist",
+    "lib": [
+      "esnext"
+    ],
+    "esModuleInterop": true
+  },
+  "include": [
+    "src/**/*"
+  ]
+}
