@@ -3,15 +3,13 @@ import prisma from "../db";
 import { UserInfoReq } from "../definitions/request";
 
 export const createAuthor = async (req: UserInfoReq, res: Response) => {
-  const book = await prisma.book.create({
+  const author = await prisma.author.create({
     data: {
-      title: req.body.title,
-      authorId: req.body.author,
-      belongsToId: req.user.id,
+      name: req.body.name,
     },
   });
 
-  res.json({ data: book });
+  res.json({ data: author });
 };
 
 // export const getBooks = async (req: UserInfoReq, res: Response) => {

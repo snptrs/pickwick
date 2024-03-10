@@ -21,7 +21,6 @@ export const getOneBook = async (req: UserInfoReq, res: Response) => {
   const book = await prisma.book.findFirst({
     where: {
       id,
-      belongsToId: req.user.id,
     },
   });
 
@@ -33,11 +32,30 @@ export const createBook = async (req: UserInfoReq, res: Response) => {
     data: {
       title: req.body.title,
       authorId: req.body.author,
-      belongsToId: req.user.id,
     },
   });
 
   res.json({ data: book });
+};
+
+export const assignBookToUser = async (req: UserInfoReq, res: Response) => {
+  const user = await prisma.user.update({
+    where: {
+      id: req.user.id,
+    },
+    data: {
+      books: {
+        connect: {
+          id: req.params.id,
+        },
+      },
+    },
+    include: {
+      books: true,
+    },
+  });
+
+  res.json({ data: user });
 };
 
 // export const updateBook = async (req: UserInfoReq, res: Response) => {

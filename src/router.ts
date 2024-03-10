@@ -1,7 +1,13 @@
 import { Router, query } from "express";
 import { body, param } from "express-validator";
-import { getBooks, getOneBook, createBook } from "./handlers/book";
+import {
+  getBooks,
+  getOneBook,
+  createBook,
+  assignBookToUser,
+} from "./handlers/book";
 import { handleInputErrors } from "./modules/middleware";
+import { createAuthor } from "./handlers/author";
 
 const router = Router();
 
@@ -11,22 +17,39 @@ const router = Router();
 
 router.get("/book", getBooks);
 router.get("/book/:id", param("id").isString(), getOneBook);
+// router.put(
+//   "/book/:id",
+//   body("name").isString(),
+//   handleInputErrors,
+//   (req, res) => {
+//     res.status(200).json({ message: req.body.name });
+//   },
+// );
 router.put(
   "/book/:id",
-  body("name").isString(),
+  param("id").isUUID(),
   handleInputErrors,
-  (req, res) => {
-    res.status(200).json({ message: req.body.name });
-  },
+  assignBookToUser,
 );
-router.post("/book", body("name").isString(), handleInputErrors, createBook);
+router.post(
+  "/book",
+  body("title").isString().escape(),
+  body("author").isUUID(),
+  handleInputErrors,
+  createBook,
+);
 router.delete("/book/:id", () => {});
 
 /**
  * Author
  */
 
-router.post("/author", body("name").isString().escape(), handleInputErrors);
+router.post(
+  "/author",
+  body("name").isString().escape(),
+  handleInputErrors,
+  createAuthor,
+);
 
 /**
  * Update
