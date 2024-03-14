@@ -4,15 +4,31 @@ import { UserInfoReq } from "../definitions/request";
 
 export const getBooks = async (req: UserInfoReq, res: Response) => {
   const user = await prisma.user.findUnique({
+    relationLoadStrategy: "join",
     where: {
       id: req.user.id,
     },
-    include: {
-      books: true,
+    select: {
+      BooksOnUsers: {
+        select: {
+          favourite: true,
+          book: {
+            select: {
+              id: true,
+              title: true,
+              author: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+      },
     },
   });
 
-  res.json({ data: user.books });
+  res.json({ data: user.BooksOnUsers });
 };
 
 export const getOneBook = async (req: UserInfoReq, res: Response) => {
@@ -39,19 +55,14 @@ export const createBook = async (req: UserInfoReq, res: Response) => {
 };
 
 export const assignBookToUser = async (req: UserInfoReq, res: Response) => {
-  const user = await prisma.user.update({
-    where: {
-      id: req.user.id,
-    },
+  const user = await prisma.booksOnUsers.create({
     data: {
-      books: {
-        connect: {
-          id: req.params.id,
-        },
-      },
+      userId: req.user.id,
+      bookId: req.params.id,
     },
     include: {
-      books: true,
+      user: true,
+      book: true,
     },
   });
 
