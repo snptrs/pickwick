@@ -3,12 +3,14 @@
     "sourceMap": true,
     "strict": false,
     "outDir": "dist",
+    "rootDir": "src",
     "lib": [
       "esnext"
     ],
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "declaration": true
   },
   "include": [
-    "src/**/*"
+    "src/**/*.ts"
   ]
 }
